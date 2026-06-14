@@ -1,9 +1,20 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
-  "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testEnvironment": "node",
+    "testRegex": ".e2e-spec.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    } ,
+    "moduleNameMapper": {
+        "^@pipes/(.*)$": "<rootDir>/src/common/pipes/$1",
+        "^@filters/(.*)$": "<rootDir>/src/common/fillters/$1",
+        "^@guards/(.*)$": "<rootDir>/src/common/guards/$1",
+        "^@middlewares/(.*)$": "<rootDir>/src/common/middlewares/$1",
+        "^@dtos/(.*)$": "<rootDir>/src/common/dtos/$1",
+        "^@schemas/(.*)$": "<rootDir>/src/common/schema/$1",
+        "^@utils/(.*)$": "<rootDir>/src/common/utils/$1",
+        "^@decorator/(.*)$": "<rootDir>/src/common/decorators/$1",
+        "^@enums/(.*)$": "<rootDir>/src/common/enums/$1"
+    }
 }
