@@ -76,7 +76,7 @@ export class Product {
         type: Map,
         of: String,
     })
-    specs!: Map<string, string>;
+    specs!: Record<string, string>;
 
     @Prop({
         default: null,
