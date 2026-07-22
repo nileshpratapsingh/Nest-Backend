@@ -23,6 +23,7 @@ import { CloudinaryUploadMiddleware } from '@middlewares/image-upload/image-uplo
         UserService,
         TokenUtility
     ],
+    exports:[TokenUtility]
 })
 export class UserModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
