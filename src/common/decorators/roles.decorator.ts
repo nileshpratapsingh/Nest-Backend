@@ -1,5 +1,5 @@
-import { SetMetadata } from "@nestjs/common";
+import { SetMetadata } from '@nestjs/common';
 
-export const ROLES_KEY:string|null = null;
+export const ROLES_KEY: string | null = "roles";
 
-export const Roles = (...role:string[])=> SetMetadata(ROLES_KEY,role);
+export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);
