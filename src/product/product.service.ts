@@ -5,7 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 // import { TokenUtility } from '@utils/token.utility';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product, ProductDocument } from '@schemas/product.schema';
-import { CloudinaryUploadResult } from '@middlewares/image-upload/image-upload.middleware';
+import { CloudinaryUploadResult } from '@interfaces/cloudinaryUpload.interface';
 
 @Injectable()
 export class ProductService {

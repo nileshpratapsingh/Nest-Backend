@@ -15,6 +15,27 @@ export class CartService {
         @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>,
     ) {}
 
+    async getCart(updateCartDto:UpdateCartDto){
+        const { userId } = updateCartDto;
+        if(!userId) return null;
+        const cart = await this.cartModel.findById({userId});
+        if(!cart) return "your cart is empty";
+
+        const prices = await Promise.all(
+            cart.items.map(async (item) => {
+                const product = await this.productModel.findById(item.productId);
+                if (!product) return 0;
+                return product.price * item.quantity;
+            }),
+        );
+
+        const totalPrice: number = prices.reduce((acc, subtotal) => acc + subtotal, 0);
+        return {
+            cart:cart,
+            totalPrice:totalPrice,
+        }
+    }
+
     async saveCart(createCartDto: CreateCartDto) {
         const { userId, productIds } = createCartDto;
 
@@ -52,27 +73,6 @@ export class CartService {
             });
 
             return await newCart.save();
-        }
-    }
-
-    async getCart(updateCartDto:UpdateCartDto){
-        const { userId } = updateCartDto;
-        if(!userId) return null;
-        const cart = await this.cartModel.findById({userId});
-        if(!cart) return "your cart is empty";
-
-        const prices = await Promise.all(
-            cart.items.map(async (item) => {
-                const product = await this.productModel.findById(item.productId);
-                if (!product) return 0;
-                return product.price * item.quantity;
-            }),
-        );
-
-        const totalPrice: number = prices.reduce((acc, subtotal) => acc + subtotal, 0);
-        return {
-            cart:cart,
-            totalPrice:totalPrice,
         }
     }
 
