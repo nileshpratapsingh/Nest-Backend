@@ -8,13 +8,15 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
+  async create(@Body() createOrderDto: CreateOrderDto) {
     return this.orderService.create(createOrderDto);
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  async findAll(
+        @Param(':id') userId:string
+    ) {
+    return await this.orderService.findAll(userId);
   }
 
   @Get(':id')

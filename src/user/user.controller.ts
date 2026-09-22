@@ -1,66 +1,74 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import { Res, Req } from '@nestjs/common';
 import { UserService } from './user.service';
+import type { Request, Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Res, Req } from '@nestjs/common';
-import { type Request, type Response } from "express";
-import { Roles } from '@decorator/roles.decorator';
-import { Role } from '@enums/auth.enum';
-import { AdminProtectedGuard } from '@guards/admin-protected/admin-protected.guard';
-import { LoginProtectedGuard } from '@guards/login-protected/login-protected.guard';
-import { CloudinaryUploadResult } from '@middlewares/image-upload/image-upload.middleware';
+import { UserOnly } from '@decorator/userOnly.decorator';
+import { AdminOnly } from '@decorator/adminOnly.decorator';
 import { AddressParserPipe } from '@pipes/address-parser/address-parser.pipe';
+import { CloudinaryUploadResult } from '@interfaces/cloudinaryUpload.interface';
+import { LoginRestrictionGuard } from '@guards/login-restriction/login-restriction.guard';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-    @Post('signUp')
-    signUpProcedure(
-        @Body(AddressParserPipe) createUserDto: CreateUserDto,
-        @Req() req: Request
-    ) {
-        // console.log("req.body =", req.body);
-        // console.log("dto =", createUserDto);
-        // console.log("file =", (req as any).cloudinaryFile as CloudinaryUploadResult);
-        const file = (req as any).cloudinaryFile as CloudinaryUploadResult;
-        return this.userService.signUp(createUserDto, file);
-    }
+  @UseGuards(LoginRestrictionGuard)
+  @Post('signUp')
+  signUpProcedure(
+    @Body(AddressParserPipe)
+    createUserDto: CreateUserDto,
 
-    @Post('login')
-    loginProcedure(
-        @Res() res :Response,
-        @Body() updateUserDto: UpdateUserDto
-    ){
-        return this.userService.login(res,updateUserDto)
-    }
+    @Req()
+    req: Request,
+  ) {
+    const file = (req as any).file as CloudinaryUploadResult;
+    return this.userService.signUp(createUserDto, file);
+  }
 
-    @Get('all')
-    @UseGuards(AdminProtectedGuard)
-    @Roles(Role.ADMIN,Role.SUPER_ADMIN)
-    findAllUsers(){
-        return this.userService.findAll();
-    }
+  @UseGuards(LoginRestrictionGuard)
+  @Post('login')
+  loginProcedure(@Res() res: Response, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.login(res, updateUserDto);
+  }
 
-    @Get(':id')
-    @UseGuards(LoginProtectedGuard)
-    @Roles(Role.USER)
-    findOne(
-        @Req() req :Request
-    ){
-        return this.userService.findOne(req);
-    }
+  @AdminOnly()
+  @Get('all')
+  findAllUsers() {
+    return this.userService.findAll();
+  }
 
-    @Patch(':id')
-    update(
-        @Param('id') id: string,
-        @Body() updateUserDto: UpdateUserDto
-    ){
-        return this.userService.updateUser(id, updateUserDto);
-    }
+  @UserOnly()
+  @Get(':id')
+  findOne(@Req() req: Request) {
+    return this.userService.findOne(req);
+  }
+  
+  @UserOnly()
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateUser(id, updateUserDto);
+  }
 
-    @Delete(':id')
-    deleteUser(@Param('id') id: string) {
-        return this.userService.deleteUser(id);
-    }
+  @UserOnly()
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    return this.userService.deleteUser(id);
+  }
+
+  @UserOnly()
+  @Post()
+  refreshTokenToggle(@Res() res:Response, @Req() req:Request){
+    return this.userService.refreshTokenToggle(req, res)
+  }
 }

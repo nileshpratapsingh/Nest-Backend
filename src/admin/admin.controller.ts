@@ -1,7 +1,6 @@
 import {
     Controller,
     Get,
-    Post,
     Body,
     Patch,
     Param,
@@ -9,9 +8,11 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { ApiGuard } from '@guards/api-guard/api-guard.guard';
+import { AdminOnly } from '@decorator/adminOnly.decorator';
+
+@AdminOnly()
 @Controller('admin')
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
