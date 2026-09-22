@@ -4,8 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './user.controller';
 import { TokenUtility } from '@utils/token.utility';
 import { User,UserSchema } from '@schemas/user.schema';
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { CloudinaryUploadMiddleware } from '@middlewares/image-upload/image-upload.middleware';
+import { Login, LoginSchema } from '@schemas/login.schema';
 
 @Module({
     imports: [
@@ -14,6 +15,10 @@ import { CloudinaryUploadMiddleware } from '@middlewares/image-upload/image-uplo
                 name: User.name,
                 schema: UserSchema
             },
+            {
+                name: Login.name,
+                schema: LoginSchema
+            },
         ]),
         JwtModule.register({}),
     ],
@@ -21,9 +26,10 @@ import { CloudinaryUploadMiddleware } from '@middlewares/image-upload/image-uplo
     providers: [
         CloudinaryUploadMiddleware,
         UserService,
-        TokenUtility
+        TokenUtility,
+        Logger
     ],
-    exports:[TokenUtility]
+    exports:[TokenUtility, Logger]
 })
 export class UserModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {

@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { MessageModule } from './message/message.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PaymentProvider } from './payment/payment.provider';
 
 @Module({
     imports: [
@@ -34,6 +35,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         MessageModule,
     ],
   controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, PaymentProvider],
 })
 export class AppModule {}

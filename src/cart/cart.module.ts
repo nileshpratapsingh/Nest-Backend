@@ -14,7 +14,8 @@ import { UserModule } from 'src/user/user.module';
             { name: Product.name, schema: ProductSchema },
         ]),
         UserModule
-    ],  controllers: [CartController],
+    ],
+  controllers: [CartController],
   providers: [CartService],
 })
 export class CartModule implements NestModule{
