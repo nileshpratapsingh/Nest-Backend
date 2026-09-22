@@ -1,56 +1,52 @@
+import { UserStatusEnum } from '@enums/user-status.enum';
+import { MessageTypeEnums } from '@enums/message-types.enum';
+import { Document, Schema as MongooseSchema } from "mongoose";
+import { MessageStatusEnum } from '@enums/message-status.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from "mongoose";
 
-export type messageDocument = Message & Document;
-
-enum Role{
-    SUPER_ADMIN = "super-admin",
-    ADMIN = "admin",
-    USER = "user",
-}
-
-enum Type{
-    BUSINESS = "business",
-    FEEDBACK = "feedback",
-    COMPLAINT = "complaint",
-}
+export type MessageDocument = Message & Document;
 
 @Schema({
-    collection:'Messages',
-    timestamps:true,
+  collection: 'Messages',
+  timestamps: true,
 })
-export class Message{
+export class Message {
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  userId!: string;
 
-    @Prop({
-        required:true,
-        enum:Type,
-        type:String,
-        default:"garbage",
-    })
+  @Prop({ required: true })
+  senderName!: string;
 
-    @Prop({required:true})
-    name!:string;
+  @Prop({ required: true })
+  senderEmail!: string;
 
-    @Prop({
-        required:true,
-        enum:Role,
-        default:Role.USER,
-        type:String,
-    })
-    role!:Role
+  @Prop({ required: true })
+  senderPhoneNumber!: number;
 
-    @Prop({required:true})
-    message!:string
+  @Prop({ required: true })
+  message!: string;
 
-    @Prop({required:true})
-    phoneNumber!:string;
+  @Prop({
+    required: true,
+    enum: MessageTypeEnums,
+    type: String,
+  })
+  messageType!: MessageTypeEnums;
 
-    @Prop({ required: true, default: Date.now.toLocaleString() })
-    createdAt!: Date;
+  @Prop({
+    required: true,
+    enum: MessageStatusEnum,
+    type: String,
+  })
+  messageStatus!: MessageStatusEnum;
 
-    @Prop({ required: true, default: Date.now.toLocaleString() })
-    updatedAt!: Date;
-
+  @Prop({
+    required: true,
+    enum: UserStatusEnum,
+    default: UserStatusEnum.USER,
+    type: String,
+  })
+  userStatus!: UserStatusEnum;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
