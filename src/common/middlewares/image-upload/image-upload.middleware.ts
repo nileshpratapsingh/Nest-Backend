@@ -1,23 +1,10 @@
-
-import { Injectable, NestMiddleware, BadRequestException } from '@nestjs/common';
-import { type Request, type Response, type NextFunction } from 'express';
 import multer from 'multer';
+import { Readable } from 'stream';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
-import { Readable } from 'stream';
-
-export interface CloudinaryUploadResult {
-    url: string;
-    secureUrl: string;
-    publicId: string;
-    format: string;
-    width: number;
-    height: number;
-    bytes: number;
-    resourceType: string;
-    originalName: string;
-    mimetype: string;
-}
+import type { Request, Response, NextFunction } from 'express';
+import { CloudinaryUploadResult } from '@interfaces/cloudinaryUpload.interface';
+import { Injectable, NestMiddleware, BadRequestException } from '@nestjs/common';
 
 const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
