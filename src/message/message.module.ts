@@ -5,7 +5,6 @@ import { User, UserSchema } from '@schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { Message, MessageSchema } from '@schemas/message.schema';
-import { Logger } from '@utils/logger.utility';
 import { TokenUtility } from '@utils/token.utility';
 
 @Module({
@@ -23,6 +22,6 @@ import { TokenUtility } from '@utils/token.utility';
         JwtModule.register({}),
     ],
     controllers: [MessageController],
-    providers: [MessageService, Logger, TokenUtility],
+    providers: [MessageService, TokenUtility],
 })
 export class MessageModule {}
